@@ -453,8 +453,12 @@ bool GridMapRosConverter::toCvImage(const grid_map::GridMap& gridMap, const std:
       return GridMapCvConverter::toImage<unsigned short, 3>(gridMap, layer, cvEncoding, lowerValue, upperValue, cvImage.image);
     case CV_16UC4:
       return GridMapCvConverter::toImage<unsigned short, 4>(gridMap, layer, cvEncoding, lowerValue, upperValue, cvImage.image);
+    case CV_32FC1:
+      return GridMapCvConverter::toImage<float, 1>(gridMap, layer, cvEncoding, lowerValue, upperValue, cvImage.image);
+    case CV_32FC3:
+      return GridMapCvConverter::toImage<float, 3>(gridMap, layer, cvEncoding, lowerValue, upperValue, cvImage.image);
     default:
-      ROS_ERROR("Expected MONO8, MONO16, RGB(A)8, RGB(A)16, BGR(A)8, or BGR(A)16 image encoding.");
+      ROS_ERROR("Expected MONO8, MONO16, RGB(A)8, RGB(A)16, BGR(A)8, BGR(A)16, TYEP_32FC1, or TYPE_32FC3 image encoding.");
       return false;
   }
 }

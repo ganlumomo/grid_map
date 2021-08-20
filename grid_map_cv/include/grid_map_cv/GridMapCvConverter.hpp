@@ -228,17 +228,34 @@ class GridMapCvConverter
       const Index index(*iterator);
       const float& value = data(index(0), index(1));
       if (std::isfinite(value)) {
-        const Type_ imageValue = (Type_)(((value - lowerValue) / (upperValue - lowerValue)) * (float)imageMax);
         const Index imageIndex(iterator.getUnwrappedIndex());
         unsigned int channel = 0;
-        image.at<cv::Vec<Type_, NChannels_>>(imageIndex(0), imageIndex(1))[channel] = imageValue;
-
-        if (isColor) {
-          image.at<cv::Vec<Type_, NChannels_>>(imageIndex(0), imageIndex(1))[++channel] = imageValue;
-          image.at<cv::Vec<Type_, NChannels_>>(imageIndex(0), imageIndex(1))[++channel] = imageValue;
-        }
-        if (hasAlpha) {
-          image.at<cv::Vec<Type_, NChannels_>>(imageIndex(0), imageIndex(1))[++channel] = imageMax;
+        
+        if (std::is_same<Type_, float>::value || std::is_same<Type_, double>::value) {
+          // save the exact real numbers without shifting and rescaling
+          const Type_ realValue = (Type_)value;
+          image.at<cv::Vec<Type_, NChannels_>>(imageIndex(0), imageIndex(1))[channel] = realValue;
+          if (isColor) {
+            Eigen::Vector3f colorVector;
+            colorValueToVector(value, colorVector);
+            image.at<cv::Vec<Type_, NChannels_>>(imageIndex(0), imageIndex(1))[channel] = colorVector[0];
+            image.at<cv::Vec<Type_, NChannels_>>(imageIndex(0), imageIndex(1))[++channel] = colorVector[1];
+            image.at<cv::Vec<Type_, NChannels_>>(imageIndex(0), imageIndex(1))[++channel] = colorVector[2];
+          }
+          if (hasAlpha) {
+            image.at<cv::Vec<Type_, NChannels_>>(imageIndex(0), imageIndex(1))[++channel] = imageMax;
+          }
+        } else if (std::is_same<Type_, unsigned short>::value || std::is_same<Type_, unsigned char>::value) {
+          // save the shifted and rescaled numbers
+          const Type_ imageValue = (Type_)(((value - lowerValue) / (upperValue - lowerValue)) * (float)imageMax);
+          image.at<cv::Vec<Type_, NChannels_>>(imageIndex(0), imageIndex(1))[channel] = imageValue;
+          if (isColor) {
+            image.at<cv::Vec<Type_, NChannels_>>(imageIndex(0), imageIndex(1))[++channel] = imageValue;
+            image.at<cv::Vec<Type_, NChannels_>>(imageIndex(0), imageIndex(1))[++channel] = imageValue;
+          }
+          if (hasAlpha) {
+            image.at<cv::Vec<Type_, NChannels_>>(imageIndex(0), imageIndex(1))[++channel] = imageMax;
+          }
         }
       }
     }
