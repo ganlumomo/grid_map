@@ -225,6 +225,7 @@ class GridMap
    * @return true if successful, false if position outside of map.
    */
   bool getIndex(const Position& position, Index& index) const;
+  bool getIndexNoBuffer(const Position& position, Index& index) const;
 
   /*!
    * Gets the 2d position of cell specified by the index (x, y of cell position) in

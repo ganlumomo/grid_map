@@ -141,6 +141,19 @@ bool getIndexFromPosition(Index& index,
   return checkIfPositionWithinMap(position, mapLength, mapPosition) && checkIfIndexInRange(index, bufferSize);
 }
 
+bool getIndexFromPosition(Index& index,
+                          const Position& position,
+                          const Length& mapLength,
+                          const Position& mapPosition,
+                          const double& resolution)
+{
+  Vector offset;
+  getVectorToOrigin(offset, mapLength);
+  Vector indexVector = ((position - offset - mapPosition).array() / resolution).matrix();
+  index = transformMapFrameToBufferOrder(indexVector);
+  return checkIfPositionWithinMap(position, mapLength, mapPosition);
+}
+
 bool checkIfPositionWithinMap(const Position& position,
                               const Length& mapLength,
                               const Position& mapPosition)

@@ -234,6 +234,10 @@ bool GridMap::getIndex(const Position& position, Index& index) const {
   return getIndexFromPosition(index, position, length_, position_, resolution_, size_, startIndex_);
 }
 
+bool GridMap::getIndexNoBuffer(const Position& position, Index& index) const {
+  return getIndexFromPosition(index, position, length_, position_, resolution_);
+}
+
 bool GridMap::getPosition(const Index& index, Position& position) const {
   return getPositionFromIndex(position, index, length_, position_, resolution_, size_, startIndex_);
 }

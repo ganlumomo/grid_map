@@ -61,6 +61,12 @@ bool getIndexFromPosition(Index& index,
                           const Size& bufferSize,
                           const Index& bufferStartIndex = Index::Zero());
 
+bool getIndexFromPosition(Index& index,
+                          const Position& position,
+                          const Length& mapLength,
+                          const Position& mapPosition,
+                          const double& resolution);
+
 /*!
  * Checks if position is within the map boundaries.
  * @param[in] position the position which is to be checked.
